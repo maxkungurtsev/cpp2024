@@ -42,7 +42,7 @@ public:
 			current = current->next;
 
 		}
-		return massAll;
+		return massAll/ itemamount;
 	}
 	int countprice(int itemamount) {
 		item* current = itemZero;
@@ -50,7 +50,7 @@ public:
 			priceAll += current->price;
 			current = current->next;
 		}
-		return priceAll;
+		return priceAll / itemamount;
 	}
 };
 
@@ -75,24 +75,26 @@ public:
 		item* current = itemZero;
 		for (int i= -1; i < itemamount; i++) {
 			if (current->characteristic!=0){
+				
 				densitySum += (current->mass / (current->characteristic));
 			}
 			current = current->next;
 		}
-		
-		return densitySum/itemamount;
+		return float(densitySum) / float(itemamount);
 	}
 };
 class PCshop :public shopbase {
 public:
-	int fpsAll = 0;
-	int meanfps(int itemamount) {
+	int minFPS = 10;
+	int minfps(int itemamount) {
 		item* current = itemZero;
 		for (int i= -1; i < itemamount; i++) {
-			fpsAll += current->characteristic;
+			if (current->characteristic < minFPS and current->characteristic!=0) {
+				minFPS = current->characteristic;
+			}
 			current = current->next;
 		}
-		return fpsAll / itemamount;
+		return minFPS;
 	}
 
 };
@@ -109,7 +111,7 @@ int main() {
 	out.open("shops.txt", std::ios::app);
 	if (out.is_open()) {
 		out << "PCshop" << '\n' << "items 5" << '\n' << "pc1 1 1 fps 1" << '\n' << "pc2 2 2 fps 2" << '\n' << "pc3 3 3 fps 3" << '\n' << "pc4 4 4 fps 4" << '\n' << "pc5 5 5 fps 5" << '\n';
-		out << "ROCKSshop" << '\n' << "items 5" << '\n' << "rock1 1 1 volume 1" << '\n' << "rock2 2 2 volume 2" << '\n' << "rock3 3 3 volume 3" << '\n' << "rock4 4 4 volume 4" << '\n' << "rock5 5 5 volume 5" << '\n';
+		out << "ROCKSshop" << '\n' << "items 5" << '\n' << "rock1 1 1 volume 1" << '\n' << "rock2 2 2 volume 2" << '\n' << "rock3 3 3 volume 3" << '\n' << "rock4 4 4 volume 4" << '\n' << "rock5 5 5 volume 1" << '\n';
 		out << "CARshop" << '\n' << "items 5" << '\n' << "car1 1 1 speed 1" << '\n' << "car2 2 2 speed 2" << '\n' << "car3 3 3 speed 3" << '\n' << "car4 4 4 speed 4" << '\n' << "car5 5 5 speed 5" << '\n';
 	}
 	out.close();
@@ -193,7 +195,7 @@ int main() {
 	std::cout << "rocks mass:" << rocksshop.countMass(rocksAmount) << '\n';
 	std::cout << "rocks price:" << rocksshop.countprice(rocksAmount) << '\n';
 	std::cout << "cars max speed:" << carshop.findMaxspeed(carsAmount) << '\n';
-	std::cout << "pcs mean fps:" << pcshop.meanfps(pcsAmount) << '\n';
+	std::cout << "pcs min fps:" << pcshop.minfps(pcsAmount) << '\n';
 	std::cout << "rocks mean density:" << rocksshop.meandensity(rocksAmount) << '\n';
 /**/
 	return 0;
